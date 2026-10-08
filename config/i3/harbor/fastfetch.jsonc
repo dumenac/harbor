@@ -1,0 +1,65 @@
+// ╭──────────────────────────────────────────────────────────────────────────────╮
+// │  Harbor — fastfetch, as an "About this machine" card.                         │
+// │  Template: {{token}} is filled from tokens.toml by `scripts/harbor apply`,    │
+// │  which writes ~/.config/fastfetch/config.jsonc and the lighthouse logo for    │
+// │  the current appearance (lit at night). Colours follow the terminal palette.  │
+// │  Keys: accent glyph + quiet label. Values: plain. One hairline, one row of    │
+// │  palette dots. Nothing shouts.                                                │
+// ╰──────────────────────────────────────────────────────────────────────────────╯
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    "type": "kitty-direct",         // kitty reads the PNG itself: instant, and no terminal round-trip
+                                    // (the "kitty" type left stray characters next to the command module)
+    "source": "{{logo}}",
+    "width": 24,
+    "padding": { "top": 1, "left": 2, "right": 4 }
+  },
+  "display": {
+    "separator": "",
+    "brightColor": false,
+    "color": { "keys": "{{faint}}", "output": "{{fg}}" },
+    "key": { "width": 13 },
+    "bar": {
+      "charElapsed": "━",
+      "charTotal": "\u001b[{{track}}m─",   // dim track: fastfetch has no colour option for it
+      "borderLeft": "",
+      "borderRight": "",
+      "width": 14
+    },
+    "percent": {
+      "type": ["num", "bar"],
+      "color": { "green": "{{success}}", "yellow": "{{warning}}", "red": "{{danger}}" }
+    },
+    "size": { "binaryPrefix": "jedec", "ndigits": 1 }
+  },
+  "modules": [
+    "break",
+    {
+      "type": "title",
+      "format": "{#1;{{accent}}}{user-name}{#}{#{{faint}}}  ·  {#}{#{{fg}}}{host-name}{#}"
+    },
+    { "type": "custom", "format": "{#{{hairline}}}────────────────────────────────────────" },
+
+    { "type": "os",       "key": "{#{{accent}}}{#{{faint}}}  OS",       "format": "{pretty-name}" },
+    { "type": "kernel",   "key": "{#{{accent}}}󰻀{#{{faint}}}  Kernel",   "format": "{release}" },
+    { "type": "uptime",   "key": "{#{{accent}}}󰅐{#{{faint}}}  Uptime" },
+    { "type": "command",  "key": "{#{{accent}}}{{harbor_glyph}}{#{{faint}}}  Harbor",
+      "text": "{{harbor}} brief" },
+    { "type": "wm",       "key": "{#{{accent}}}󱇙{#{{faint}}}  Desktop",  "format": "{pretty-name}" },
+    { "type": "shell",    "key": "{#{{accent}}}󰆍{#{{faint}}}  Shell",    "format": "{pretty-name} {version}" },
+    { "type": "terminal", "key": "{#{{accent}}}󰞷{#{{faint}}}  Terminal", "format": "{pretty-name} {version}" },
+    { "type": "terminalfont", "key": "{#{{accent}}}󰛖{#{{faint}}}  Font", "format": "{name} {size}" },
+
+    "break",
+    { "type": "cpu",      "key": "{#{{accent}}}󰻠{#{{faint}}}  CPU",      "format": "{name}  {#{{faint}}}{cores-logical} threads{#}" },
+    { "type": "gpu",      "key": "{#{{accent}}}󰢮{#{{faint}}}  GPU",      "format": "{name}" },
+    { "type": "memory",   "key": "{#{{accent}}}󰍛{#{{faint}}}  Memory",   "format": "{used} / {total}  {percentage-bar}" },
+    { "type": "disk",     "key": "{#{{accent}}}󰋊{#{{faint}}}  Disk",     "folders": "/",
+      "format": "{size-used} / {size-total}  {size-percentage-bar}" },
+    { "type": "display",  "key": "{#{{accent}}}󰍹{#{{faint}}}  Displays", "compactType": "original-with-refresh-rate" },
+
+    "break",
+    { "type": "colors", "symbol": "circle", "paddingLeft": 0 }
+  ]
+}

@@ -1,0 +1,278 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │  i3 — Harbor                                                                  │
+# │                                                                               │
+# │  Look:  harbor/tokens.toml + harbor/look.conf → harbor/generated.conf        │
+# │  Yours: ~/.config/i3/local/*.conf (monitors, apps, extra keys) — never       │
+# │         overwritten by the installer; see local/README.md                    │
+# │                                                                               │
+# │  $mod+c Control Center   $mod+d Launcher   $mod+Shift+x Power   $mod+F1 Keys   │
+# │  $mod+Shift+c reload     $mod+Shift+r restart (re-runs scripts/autostart.sh)   │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+include ~/.config/i3/harbor/generated.conf
+
+set $mod      Mod4
+set $alt      Mod1
+set $term     kitty
+set $browser  firefox
+set $files    xdg-open ~
+set $scripts  ~/.config/i3/scripts
+set $harbor   ~/.config/i3/scripts/harbor
+set $menu     ~/.config/i3/scripts/launcher apps
+
+# Look — colours, fonts, borders, gaps and the bar — lives in harbor/look.conf and is
+# rendered into harbor/generated.conf (included above). Corners/shadows/motion: picom.
+smart_borders on
+title_align   center
+for_window [all] title_window_icon padding 6px
+
+# ── Behaviour ─────────────────────────────────────────────────────────────────────
+focus_follows_mouse          yes
+mouse_warping                output
+workspace_auto_back_and_forth yes
+focus_on_window_activation   smart
+popup_during_fullscreen      smart
+force_display_urgency_hint   500 ms
+floating_modifier            $mod
+tiling_drag                  modifier titlebar
+floating_minimum_size        75 x 50
+
+# ── Workspaces ────────────────────────────────────────────────────────────────────
+set $ws1  "1"
+set $ws2  "2"
+set $ws3  "3"
+set $ws4  "4"
+set $ws5  "5"
+set $ws6  "6"
+set $ws7  "7"
+set $ws8  "8"
+set $ws9  "9"
+set $ws10 "10"
+
+# Pin workspaces to monitors in ~/.config/i3/local/i3.conf, e.g.
+#   workspace 1 output DP-0
+#   workspace 6 output HDMI-0 DP-0
+
+# ── Autostart (runs at startup + restart, idempotent; see scripts/autostart.sh) ─
+exec_always --no-startup-id $scripts/autostart.sh
+
+# ══ Keybindings ══════════════════════════════════════════════════════════════
+
+# ── Apps ──
+bindsym $mod+Return        exec $term
+bindsym $mod+Shift+Return  exec $term --class floating-term
+bindsym $mod+grave         exec --no-startup-id $scripts/dropdown.sh
+bindsym $mod+d             exec --no-startup-id $menu
+bindsym $mod+Shift+d       exec --no-startup-id $scripts/launcher run
+bindsym $alt+Tab           exec --no-startup-id $scripts/launcher windows
+bindsym $mod+b             exec $browser
+bindsym $mod+n             exec $files
+bindsym $mod+m             exec pavucontrol
+bindsym $mod+F1            exec --no-startup-id $scripts/keys.py
+bindsym $mod+x             exec --no-startup-id $scripts/lock.sh
+
+# ── Harbor: Control Center, appearance, calendar, Focus ──
+bindsym $mod+c             exec --no-startup-id $harbor center
+bindsym $mod+Shift+w       exec --no-startup-id $harbor toggle
+bindsym $mod+Ctrl+w        exec --no-startup-id $harbor set auto
+bindsym $mod+Ctrl+t        exec --no-startup-id $harbor calendar
+bindsym $mod+Ctrl+n        exec --no-startup-id $harbor dnd toggle
+bindsym $mod+Ctrl+f        exec --no-startup-id $harbor focus
+
+# ── Launcher tabs: calculator, emoji, clipboard history ──
+bindsym $mod+equal         exec --no-startup-id $scripts/launcher calc
+bindsym $mod+Ctrl+e        exec --no-startup-id $scripts/launcher emoji
+bindsym $mod+Ctrl+v        exec --no-startup-id $scripts/launcher clipboard
+
+# ── Screenshots (saved to ~/Pictures/Screenshots + clipboard) ──
+bindsym Print              exec --no-startup-id $scripts/screenshot.sh gui
+bindsym Shift+Print        exec --no-startup-id $scripts/screenshot.sh full
+bindsym Ctrl+Print         exec --no-startup-id $scripts/screenshot.sh window
+bindsym $mod+Shift+Print   exec --no-startup-id $scripts/screenshot.sh area
+
+# ── Audio / media ──
+bindsym XF86AudioRaiseVolume exec --no-startup-id $scripts/volume.sh up
+bindsym XF86AudioLowerVolume exec --no-startup-id $scripts/volume.sh down
+bindsym XF86AudioMute        exec --no-startup-id $scripts/volume.sh mute
+bindsym XF86AudioMicMute     exec --no-startup-id $scripts/volume.sh mic
+bindsym XF86AudioPlay        exec --no-startup-id playerctl play-pause
+bindsym XF86AudioPause       exec --no-startup-id playerctl play-pause
+bindsym XF86AudioNext        exec --no-startup-id playerctl next
+bindsym XF86AudioPrev        exec --no-startup-id playerctl previous
+bindsym XF86AudioStop        exec --no-startup-id playerctl stop
+
+# ── Keep Awake (inhibit screensaver/DPMS/lock; shows in the bar) ──
+bindsym $mod+Shift+y       exec --no-startup-id $scripts/caffeine.sh toggle
+bindsym $mod+Ctrl+c        exec --no-startup-id $scripts/caffeine.sh off
+
+# ── Notifications (dunst) ──
+bindsym $mod+Ctrl+space        exec --no-startup-id dunstctl close
+bindsym $mod+Ctrl+Shift+space  exec --no-startup-id dunstctl close-all
+bindsym $mod+Ctrl+grave        exec --no-startup-id dunstctl history-pop
+
+# ── Windows ──
+bindsym $mod+q        kill
+bindsym $mod+Shift+q  kill
+bindsym $alt+F4       kill
+
+bindsym $mod+j          focus left
+bindsym $mod+k          focus down
+bindsym $mod+l          focus up
+bindsym $mod+semicolon  focus right
+bindsym $mod+Left       focus left
+bindsym $mod+Down       focus down
+bindsym $mod+Up         focus up
+bindsym $mod+Right      focus right
+bindsym $mod+u          [urgent=latest] focus
+
+bindsym $mod+Shift+j          move left
+bindsym $mod+Shift+k          move down
+bindsym $mod+Shift+l          move up
+bindsym $mod+Shift+semicolon  move right
+bindsym $mod+Shift+Left       move left
+bindsym $mod+Shift+Down       move down
+bindsym $mod+Shift+Up         move up
+bindsym $mod+Shift+Right      move right
+
+# resize without entering a mode (5% steps); $mod+r for the fine-grained mode
+bindsym $mod+Ctrl+j          resize shrink width  5 ppt or 5 ppt
+bindsym $mod+Ctrl+k          resize grow   height 5 ppt or 5 ppt
+bindsym $mod+Ctrl+l          resize shrink height 5 ppt or 5 ppt
+bindsym $mod+Ctrl+semicolon  resize grow   width  5 ppt or 5 ppt
+bindsym $mod+Ctrl+Left       resize shrink width  5 ppt or 5 ppt
+bindsym $mod+Ctrl+Down       resize grow   height 5 ppt or 5 ppt
+bindsym $mod+Ctrl+Up         resize shrink height 5 ppt or 5 ppt
+bindsym $mod+Ctrl+Right      resize grow   width  5 ppt or 5 ppt
+
+bindsym $mod+h        split h
+bindsym $mod+v        split v
+bindsym $mod+f        fullscreen toggle
+bindsym $mod+Shift+f  fullscreen toggle global
+bindsym $mod+s        layout stacking
+bindsym $mod+w        layout tabbed
+bindsym $mod+e        layout toggle split
+bindsym $mod+Shift+space  floating toggle
+bindsym $mod+space        focus mode_toggle
+bindsym $mod+a        focus parent
+bindsym $mod+Shift+a  focus child
+bindsym $mod+Shift+s  sticky toggle
+bindsym $mod+Shift+b  border toggle 2
+
+# scratchpad
+bindsym $mod+minus        scratchpad show
+bindsym $mod+Shift+minus  move scratchpad
+
+# ── Workspaces ──
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# move container AND follow it
+bindsym $mod+Ctrl+1 move container to workspace number $ws1;  workspace number $ws1
+bindsym $mod+Ctrl+2 move container to workspace number $ws2;  workspace number $ws2
+bindsym $mod+Ctrl+3 move container to workspace number $ws3;  workspace number $ws3
+bindsym $mod+Ctrl+4 move container to workspace number $ws4;  workspace number $ws4
+bindsym $mod+Ctrl+5 move container to workspace number $ws5;  workspace number $ws5
+bindsym $mod+Ctrl+6 move container to workspace number $ws6;  workspace number $ws6
+bindsym $mod+Ctrl+7 move container to workspace number $ws7;  workspace number $ws7
+bindsym $mod+Ctrl+8 move container to workspace number $ws8;  workspace number $ws8
+bindsym $mod+Ctrl+9 move container to workspace number $ws9;  workspace number $ws9
+bindsym $mod+Ctrl+0 move container to workspace number $ws10; workspace number $ws10
+
+bindsym $mod+Tab                workspace back_and_forth
+bindsym $mod+bracketleft        workspace prev
+bindsym $mod+bracketright       workspace next
+bindsym $mod+Shift+bracketleft  move container to workspace prev;  workspace prev
+bindsym $mod+Shift+bracketright move container to workspace next;  workspace next
+bindsym $mod+comma              focus output left
+bindsym $mod+period             focus output right
+bindsym $mod+Shift+comma        move container to output left;  focus output left
+bindsym $mod+Shift+period       move container to output right; focus output right
+bindsym $mod+Ctrl+Shift+Left    move workspace to output left
+bindsym $mod+Ctrl+Shift+Right   move workspace to output right
+
+# ── Session ──
+bindsym $mod+Shift+c  reload
+bindsym $mod+Shift+r  restart
+bindsym $mod+Shift+e  exec --no-startup-id $harbor power
+bindsym $mod+Shift+x  exec --no-startup-id $harbor power
+bindsym $mod+p        bar mode toggle
+bindsym $mod+r        mode $mode_resize
+bindsym $mod+g        mode $mode_gaps
+
+# ══ Modes (the bar shows the name as an accent pill) ════════════════════════════
+
+set $mode_resize "Resize   ←↓↑→ or hjkl   ·   Shift  1 px   ·   Esc  done"
+mode $mode_resize {
+        bindsym j          resize shrink width  10 px or 10 ppt
+        bindsym k          resize grow   height 10 px or 10 ppt
+        bindsym l          resize shrink height 10 px or 10 ppt
+        bindsym semicolon  resize grow   width  10 px or 10 ppt
+        bindsym Left       resize shrink width  10 px or 10 ppt
+        bindsym Down       resize grow   height 10 px or 10 ppt
+        bindsym Up         resize shrink height 10 px or 10 ppt
+        bindsym Right      resize grow   width  10 px or 10 ppt
+        bindsym Shift+j          resize shrink width  1 px
+        bindsym Shift+k          resize grow   height 1 px
+        bindsym Shift+l          resize shrink height 1 px
+        bindsym Shift+semicolon  resize grow   width  1 px
+        bindsym Shift+Left       resize shrink width  1 px
+        bindsym Shift+Down       resize grow   height 1 px
+        bindsym Shift+Up         resize shrink height 1 px
+        bindsym Shift+Right      resize grow   width  1 px
+
+        bindsym Return  mode "default"
+        bindsym Escape  mode "default"
+        bindsym $mod+r  mode "default"
+}
+
+set $mode_gaps "Gaps   + / −  inner   ·   Shift  outer   ·   0  reset   ·   Esc  done"
+mode $mode_gaps {
+        bindsym plus         gaps inner current plus 4
+        bindsym equal        gaps inner current plus 4
+        bindsym minus        gaps inner current minus 4
+        bindsym Shift+plus   gaps outer current plus 4
+        bindsym Shift+equal  gaps outer current plus 4
+        bindsym Shift+underscore gaps outer current minus 4
+        bindsym 0            gaps inner current set 10; gaps outer current set 3   # = tokens.toml
+        bindsym Return  mode "default"
+        bindsym Escape  mode "default"
+        bindsym $mod+g  mode "default"
+}
+
+# ══ Window rules ═════════════════════════════════════════════════════════════
+for_window [window_role="pop-up"]      floating enable
+for_window [window_role="task_dialog"] floating enable
+for_window [window_type="dialog"]      floating enable
+for_window [window_type="utility"]     floating enable
+for_window [class="(?i)pavucontrol"]   floating enable, resize set 1000 640, move position center
+for_window [class="Blueman-manager"]   floating enable, move position center
+for_window [class="Arandr"]            floating enable, move position center
+for_window [class="flameshot"]         floating enable, border pixel 0
+for_window [class="floating-term"]     floating enable, resize set 1400 850, move position center
+for_window [class="dropdown-term"]     floating enable, border pixel 0, resize set 1800 1000, move position center, move scratchpad, scratchpad show
+for_window [title="^Picture-in-Picture$"] floating enable, sticky enable, border none
+
+
+# ══ Bar: see harbor/look.conf ═══════════════════════════════════════════════
+
+# ══ Yours: local additions (monitors, apps, extra bindings) ══════════════════
+include ~/.config/i3/local/*.conf

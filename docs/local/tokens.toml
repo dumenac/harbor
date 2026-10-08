@@ -1,0 +1,28 @@
+# Your Harbor tokens — merged over ~/.config/i3/harbor/tokens.toml. Uncomment what you want,
+# then run:  ~/.config/i3/scripts/harbor apply
+
+# Your own day/night wallpapers (any size; each monitor gets a "cover" fit):
+# [day]
+# wallpaper = "~/Pictures/my-day.jpg"
+# [night]
+# wallpaper = "~/Pictures/my-night.jpg"
+#
+# …and where the fastfetch card's logo is cut from them (fractions of width/height):
+# [fastfetch]
+# logo_crop = [0.30, 0.20, 0.30, 0.55]
+
+# A different schedule:
+# [schedule]
+# night_starts = "21:30"
+# day_starts   = "06:30"
+
+# Another accent:
+# [day]
+# accent = "#7c3aed"
+# [night]
+# accent = "#f59e0b"
+
+# Quieter: no chime
+# [sound]
+# transition = ""
+# focus_end  = ""

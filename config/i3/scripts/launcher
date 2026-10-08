@@ -1,0 +1,38 @@
+#!/bin/sh
+# launcher [apps|calc|emoji|clipboard|windows|run] — the Spotlight-style panel, opened on a tab.
+#   Apps · Calc · Emoji · Clipboard · Windows   (Shift+←/→ or Ctrl+Tab to move between them)
+# Calc (rofi-calc) shows results live as you type; Enter copies the result. Emoji and Clipboard
+# are rofi script modes in this directory.
+S="$HOME/.config/i3/scripts"
+
+case "${1:-apps}" in
+    apps)      show=drun ;;
+    calc)      show=calc ;;
+    emoji)     show=Emoji ;;
+    clipboard) show=Clipboard ;;
+    windows)   show=window ;;
+    run)       exec rofi -show run -modi run ;;
+    *)         echo "usage: $0 [apps|calc|emoji|clipboard|windows|run]" >&2; exit 2 ;;
+esac
+
+# Calc needs the rofi-calc plugin: a distro package (Arch: rofi-calc) or extras/build-rofi-calc.sh,
+# which installs to ~/.local/lib/rofi. rofi loads plugins before reading config.rasi, so a
+# plugin path has to be given on the command line.
+modi="drun"
+set --
+if [ -e "$HOME/.local/lib/rofi/calc.so" ]; then
+    set -- -plugin-path "$HOME/.local/lib/rofi"
+    modi="$modi,calc"
+elif ls /usr/lib/rofi/calc.so /usr/lib/*/rofi/calc.so /usr/lib64/rofi/calc.so >/dev/null 2>&1; then
+    modi="$modi,calc"
+elif [ "$show" = calc ]; then
+    notify-send -a harbor "󱖦  Calculator" "Install rofi-calc (or run extras/build-rofi-calc.sh) to enable it."
+    exit 1
+fi
+modi="$modi,Emoji:$S/emoji.py,Clipboard:$S/clipboard.py,window"
+
+exec rofi "$@" -show "$show" -modi "$modi" \
+    -calc-command "printf %s '{result}' | xclip -selection clipboard" \
+    -hint-result "=  " \
+    -hint-welcome "12 × 7  ·  30 EUR to USD  ·  3 weeks in days  ·  sqrt(2)" \
+    -no-persist-history

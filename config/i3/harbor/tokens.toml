@@ -1,0 +1,158 @@
+# ╭──────────────────────────────────────────────────────────────────────────────╮
+# │  Harbor — design tokens                                                       │
+# │                                                                               │
+# │  The one place colour, type, shape, motion and sound are defined.            │
+# │  `harbor apply` renders them into i3, the bar, rofi, dunst, kitty, GTK apps, │
+# │  fastfetch, the wallpaper and the lock screen.                               │
+# │                                                                               │
+# │  Day   07:00–20:00  paper white · harbor-blue accent · the sunlit lighthouse │
+# │  Night 20:00–07:00  deep slate · lantern-amber accent · the light switched on│
+# │                                                                               │
+# │  Don't edit this file for personal tweaks: put only the keys you want to     │
+# │  change in ~/.config/i3/local/tokens.toml (same layout, merged on top), then │
+# │  run  ~/.config/i3/scripts/harbor apply                                      │
+# ╰──────────────────────────────────────────────────────────────────────────────╯
+
+[schedule]
+night_starts = "20:00"
+day_starts   = "07:00"
+
+[type]
+ui      = "Inter"                          # text everywhere (closest free cousin of SF Pro)
+display = "Inter Display"                  # large type: lock screen
+mono    = "JetBrains Mono"                 # calendar, key cheat-sheet
+icons   = "JetBrainsMono Nerd Font Propo"  # Material Design glyphs, used like SF Symbols
+# Sizes are pixels, like CSS. Pango gets them as "14px", so i3/i3bar (which render at the X
+# screen's 152 dpi on :0) and rofi/dunst (96 dpi) come out the same size.
+size_bar    = 14
+size_title  = 13
+size_menu   = 15
+size_menu_big = 20
+size_notify = 13
+
+[shape]
+radius_window = 12
+radius_panel  = 16      # rofi
+radius_notify = 14      # dunst
+radius_small  = 8       # list rows, buttons
+border        = 2       # window border, logical px (3 px on :0)
+gap_inner     = 10      # i3 sizes are logical px: ×1.58 on :0 (152 dpi), ×1.4 over xrdp
+gap_outer     = 3
+notify_offset = "auto"  # notification cards on the window grid (measured); or pin it: [19, 47]
+
+[motion]                # seconds; one curve for everything, Apple-style ease-out
+curve      = "cubic-bezier(0.2, 0.8, 0.2, 1)"
+fast       = 0.12
+base       = 0.18
+slow       = 0.26
+wallpaper_fade = 1.4    # day ⇄ night crossfade on the desktop
+
+# Colours. `vibrancy` mixes the wallpaper's sky into the bar so it reads like frosted glass
+# without needing a compositor (works over xrdp too).
+[day]
+wallpaper   = "~/.local/share/harbor/wallpapers/edgartown/day.jpg"   # any image works
+vibrancy    = 0.30
+base        = "#ffffff"   # what the sky is mixed into for the bar
+canvas      = "#fbfbf9"   # panels: launcher, notifications
+raised      = "#f1f1ee"   # inputs, selected rows
+hairline    = "#e2e2de"
+text        = "#15171a"
+text_muted  = "#5b6068"
+text_faint  = "#8a8f96"
+accent      = "#2e6da4"   # harbor blue
+on_accent   = "#ffffff"
+success     = "#2f855a"
+warning     = "#b7791f"
+danger      = "#d0392e"
+border_idle = "#4a5059"   # unfocused window edge
+alpha_panel = 0.95        # launcher / notification translucency (blurred by picom); high so
+                          # light panels stay light over dark terminals
+
+[night]
+wallpaper   = "~/.local/share/harbor/wallpapers/edgartown/night.jpg"
+vibrancy    = 0.55
+base        = "#0f1317"
+canvas      = "#14181d"
+raised      = "#1d232a"
+hairline    = "#2a3038"
+text        = "#ecedee"
+text_muted  = "#9da3ab"
+text_faint  = "#6b727b"
+accent      = "#e8a94a"   # lantern amber
+on_accent   = "#161a1f"
+success     = "#5bc48a"
+warning     = "#f5b94f"
+danger      = "#ff6b5e"
+border_idle = "#2c323a"
+alpha_panel = 0.88
+
+# ── Focus mode ($mod+Ctrl+f, Control Center) ─────────────────────────────────────
+# Do Not Disturb + a softened, captioned wallpaper, a countdown in
+# the bar, and a chime when it ends.
+[focus]
+minutes  = 50
+choices  = [25, 50, 90]
+title    = "Focus"
+subtitle = "Quiet hours · notifications paused"
+
+# ── Sound ─────────────────────────────────────────────────────────────────────────
+# Played quietly at the 20:00 / 07:00 switch and when Focus ends. Empty string = silent.
+[sound]
+volume      = 0.4
+transition  = "/usr/share/sounds/ocean/stereo/service-login.oga"
+focus_end   = "/usr/share/sounds/ocean/stereo/completion-success.oga"
+
+# ── Apps: GTK (and Firefox, which follows GTK) switch with Day/Night via xsettingsd ─
+[apps]
+font        = "Inter 10"
+cursor      = "breeze_cursors"
+cursor_size = 24
+day_theme   = "Adwaita"
+night_theme = "Adwaita-dark"
+day_icons   = "Papirus-Light"   # dark panel glyphs → tray icons read on the light bar
+night_icons = "Papirus-Dark"
+
+# ── Terminal (kitty): stays dark in both, so TUIs keep their colours; the background
+# shifts from dusk blue (day) to harbor night (night) and the cursor takes the accent.
+[terminal]
+font    = "JetBrains Mono"
+size    = 11
+opacity = 0.94
+# shared ANSI palette, tuned for a dark background
+color0  = "#1e252d"
+color1  = "#f0716a"
+color2  = "#8cc98f"
+color3  = "#e8b25a"
+color4  = "#6ea8dc"
+color5  = "#c39ae0"
+color6  = "#63c3bf"
+color7  = "#c8ccd1"
+color8  = "#4d5661"
+color9  = "#ff8f88"
+color10 = "#a7d9a9"
+color11 = "#f2c97f"
+color12 = "#93c0e8"
+color13 = "#d6b8ee"
+color14 = "#8ad6d2"
+color15 = "#f3f4f5"
+
+[terminal.day]
+background = "#182029"
+foreground = "#e6e9ec"
+cursor     = "#6ea8dc"
+selection  = "#2b3c52"
+tab_active = "#2b3c52"
+
+[terminal.night]
+background = "#12161b"
+foreground = "#e4e6e8"
+cursor     = "#e8a94a"
+selection  = "#3a3226"
+tab_active = "#2c2a26"
+
+# ── fastfetch: "About this machine" card (template: harbor/fastfetch.jsonc) ──────
+# The logo is cut from the current wallpaper (the lighthouse, lit at night), with rounded corners.
+# Using your own wallpapers? Point logo_crop at whatever you want in the card.
+[fastfetch]
+logo_crop   = [0.281, 0.194, 0.302, 0.593]   # x, y, width, height as fractions of the wallpaper
+logo_radius = 0.09                           # corner radius, fraction of the logo width

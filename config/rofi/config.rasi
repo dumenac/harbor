@@ -1,0 +1,127 @@
+/* ╭──────────────────────────────────────────────────────────────────────────╮
+   │  rofi — Harbor. A Spotlight-style panel in the upper third of the screen. │
+   │  Colours/fonts: harbor.rasi (generated from ~/.config/i3/harbor/tokens.toml│
+   │  on every Day/Night switch). Translucency is blurred by picom.            │
+   ╰──────────────────────────────────────────────────────────────────────────╯ */
+
+configuration {
+    modi:                "drun,run,window";
+    show-icons:          true;
+    icon-theme:          "Papirus";
+    terminal:            "kitty";
+    drun-display-format: "{name}";
+    window-format:       "{t}";
+    display-drun:        "Apps";
+    display-run:         "Run";
+    display-window:      "Windows";
+    display-calc:        "Calc";
+    matching:            "fuzzy";
+    sort:                true;
+    sorting-method:      "fzf";
+    hover-select:        true;
+    me-select-entry:     "";
+    me-accept-entry:     "MousePrimary";
+    kb-mode-next:        "Shift+Right,Control+Tab";
+    kb-mode-previous:    "Shift+Left,Control+ISO_Left_Tab";
+}
+
+@theme "/dev/null"     /* start from a blank theme, not rofi's default (dashed rules etc.) */
+@import "harbor.rasi"
+
+* {
+    background-color: transparent;
+    text-color:       @h-text;
+    font:             @h-font;
+}
+
+window {
+    location:         north;
+    anchor:           north;
+    y-offset:         20%;
+    width:            680px;
+    background-color: @h-panel;
+    border:           1px solid;
+    border-color:     @h-hairline;
+    border-radius:    @h-radius;
+}
+
+mainbox {
+    spacing:  0;
+    children: [ inputbar, message, listview, mode-switcher ];
+}
+
+/* ── search field ── */
+inputbar {
+    padding:      18px 22px;
+    spacing:      14px;
+    border:       0px 0px 1px solid 0px;
+    border-color: @h-hairline;
+    children:     [ textbox-search, entry ];
+}
+textbox-search {
+    expand:         false;
+    str:            "󰍉";
+    font:           @h-font-big;
+    text-color:     @h-faint;
+    vertical-align: 0.5;
+}
+entry {
+    font:              @h-font-big;
+    placeholder:       "Search";
+    placeholder-color: @h-faint;
+    cursor:            text;
+    vertical-align:    0.5;
+}
+
+/* ── header line (used by the Control Center, power menu, cheat-sheet) ── */
+message {
+    padding:      16px 22px 12px 22px;
+    border:       0px 0px 1px solid 0px;
+    border-color: @h-hairline;
+}
+textbox { text-color: @h-text; markup: true; }
+
+/* ── results ── */
+listview {
+    lines:        8;
+    border:       0px;
+    padding:      8px;
+    spacing:      2px;
+    fixed-height: false;
+    scrollbar:    false;
+    cycle:        true;
+}
+element {
+    padding:       10px 14px;
+    spacing:       14px;
+    border-radius: @h-radius-small;
+    cursor:        pointer;
+}
+element normal.normal, element alternate.normal { background-color: transparent; text-color: @h-text; }
+element normal.urgent, element alternate.urgent { text-color: @h-danger; }
+element normal.active, element alternate.active { text-color: @h-accent; }
+element selected.normal { background-color: @h-select; text-color: @h-text; }
+element selected.urgent { background-color: @h-select; text-color: @h-danger; }
+element selected.active { background-color: @h-select; text-color: @h-accent; }
+element-icon { size: 26px; cursor: inherit; }
+element-text {
+    vertical-align: 0.5;
+    text-color:     inherit;
+    highlight:      bold;
+    cursor:         inherit;
+}
+
+/* ── Apps · Run · Windows ── */
+mode-switcher {
+    padding:      8px;
+    spacing:      6px;
+    border:       1px solid 0px 0px 0px;
+    border-color: @h-hairline;
+}
+button {
+    padding:       7px 0;
+    border-radius: @h-radius-small;
+    text-color:    @h-faint;
+    cursor:        pointer;
+}
+button selected { background-color: @h-field; text-color: @h-text; }

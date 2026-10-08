@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+# files harbor generates on your machine
+config/i3/harbor/generated.conf
+config/rofi/harbor.rasi
+config/dunst/dunstrc.d/
+config/kitty/harbor.conf

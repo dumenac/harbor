@@ -1,0 +1,100 @@
+# ╭──────────────────────────────────────────────────────────────────────────╮
+# │  dunst — Harbor. Notification cards, top right, below the bar.            │
+# │  Colours/fonts/radius: dunstrc.d/90-harbor.conf, generated from           │
+# │  ~/.config/i3/harbor/tokens.toml on every Day/Night switch.               │
+# ╰──────────────────────────────────────────────────────────────────────────╯
+[global]
+    monitor = 0
+    follow = keyboard
+    width = (320, 400)
+    height = (0, 320)
+    origin = top-right
+    offset = (16, 40)          # harbor overrides this in dunstrc.d/90-harbor.conf (window grid)
+    scale = 1                  # sizes are px, like every other Harbor surface
+    notification_limit = 4
+    gap_size = 10
+
+    progress_bar = true
+    progress_bar_height = 6
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 150
+    progress_bar_max_width = 350
+    progress_bar_corner_radius = 3
+
+    indicate_hidden = no
+    transparency = 0
+    separator_height = 0
+    padding = 14
+    horizontal_padding = 16
+    text_icon_padding = 14
+    frame_width = 1
+    sort = yes
+
+    line_height = 3
+    markup = full
+    format = "<b>%s</b>\n%b"
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 120
+    ellipsize = end
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = no
+
+    enable_recursive_icon_lookup = true
+    icon_theme = "Papirus, Adwaita"
+    icon_position = left
+    min_icon_size = 36
+    max_icon_size = 48
+    icon_corner_radius = 8
+
+    sticky_history = yes
+    history_length = 30
+    dmenu = /usr/bin/rofi -dmenu -p dunst
+    browser = /usr/bin/xdg-open
+    always_run_script = true
+    title = Dunst
+    class = Dunst
+    ignore_dbusclose = false
+
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
+
+[urgency_low]
+    timeout = 5
+
+[urgency_normal]
+    timeout = 8
+
+[urgency_critical]
+    timeout = 0
+
+# HUD-style feedback: short, never kept in history
+[volume]
+    appname = volume
+    history_ignore = yes
+    timeout = 2
+
+[caffeine]
+    appname = caffeine
+    history_ignore = yes
+    timeout = 3
+
+[calendar]
+    appname = calendar
+    history_ignore = yes
+
+[network]
+    appname = network
+    history_ignore = yes
+    timeout = 6
+
+[harbor]
+    appname = harbor
+    timeout = 7
+
+[screenshot]
+    appname = screenshot
+    timeout = 5

@@ -1,0 +1,16 @@
+name: check
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends shellcheck i3-wm imagemagick \
+            fontconfig python3 rofi dunst feh x11-xserver-utils x11-utils jq xclip libnotify-bin
+      - name: make check
+        run: make check
